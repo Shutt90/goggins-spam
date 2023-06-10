@@ -2,6 +2,7 @@ package controller
 
 import (
 	"fmt"
+	"math/rand"
 	"net/http"
 	"strconv"
 	"strings"
@@ -11,10 +12,6 @@ import (
 )
 
 func GetQuote(w http.ResponseWriter, r *http.Request) {
-	startScraper(w, r)
-}
-
-func startScraper(w http.ResponseWriter, r *http.Request) error {
 	c := colly.NewCollector()
 	quotes := []string{}
 
@@ -43,5 +40,10 @@ func startScraper(w http.ResponseWriter, r *http.Request) error {
 
 	c.Visit("https://thestrive.co/best-david-goggins-quotes-for-motivation/")
 
-	return nil
+	rand.Seed(time.Now().Unix())
+	sendMessage(quotes[rand.Intn(len(quotes))])
+}
+
+func sendMessage(msg string) {
+	// TODO: twilio or facebook api send quote to person
 }

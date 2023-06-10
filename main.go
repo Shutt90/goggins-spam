@@ -3,19 +3,11 @@ package main
 import (
 	"net/http"
 
-	"github.com/gocolly/colly"
-	"google.golang.org/appengine"
+	"github.com/shutt90/goggins-spam/routes"
 )
 
 func main() {
-	c := colly.NewCollector()
+	router := routes.Init()
 
-	c.OnRequest(startScraper(w, r))
-}
-
-func startScraper(w http.ResponseWriter, r *http.Request) {
-	ctx := appengine.NewContext(r)
-	c := colly.NewCollector()
-	c.Appengine(ctx)
-	c.Visit("https://www.invajy.com/david-goggins-quotes/")
+	http.ListenAndServe(":8080", router)
 }

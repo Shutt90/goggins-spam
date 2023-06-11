@@ -1,14 +1,18 @@
 package controller
 
 import (
+	"encoding/json"
 	"fmt"
 	"math/rand"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
 	"time"
 
 	"github.com/gocolly/colly"
+	"github.com/twilio/twilio-go"
+	twilioApi "github.com/twilio/twilio-go/rest/api/v2010"
 )
 
 func GetQuote(w http.ResponseWriter, r *http.Request) {
@@ -45,5 +49,21 @@ func GetQuote(w http.ResponseWriter, r *http.Request) {
 }
 
 func sendMessage(msg string) {
-	// TODO: twilio or facebook api send quote to person
+	client := twilio.NewRestClientWithParams(twilio.ClientParams{
+		Username: os.Getenv("TWILIO_SID"),
+		Password: os.Getenv("TWILIO_AUTH"),
+	})
+
+	params := &twilioApi.CreateMessageParams{}
+	params.SetTo(os.Getenv("MY_NUMBER"))
+	params.SetFrom(os.Getenv("TWILIO_NUMBER"))
+	params.SetBody(msg)
+
+	resp, err := client.Api.CreateMessage(params)
+	if err != nil {
+		fmt.Println("Error sending SMS message: " + err.Error())
+	} else {
+		response, _ := json.Marshal(*resp)
+		fmt.Println("Response: " + string(response))
+	}
 }

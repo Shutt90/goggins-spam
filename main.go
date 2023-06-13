@@ -1,19 +1,18 @@
 package main
 
 import (
-	"fmt"
-	"net/http"
+	"github.com/shutt90/goggins-spam/controllers"
 
+	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/joho/godotenv"
-	"github.com/shutt90/goggins-spam/routes"
 )
 
-func main() {
+func handleRequest() {
 	godotenv.Load()
-	router := routes.Init()
 
-	err := http.ListenAndServe(":8080", router)
-	if err != nil {
-		fmt.Println(err)
-	}
+	controller.GetQuote()
+}
+
+func main() {
+	lambda.Start(handleRequest)
 }

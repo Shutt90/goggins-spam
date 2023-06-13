@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"math/rand"
-	"net/http"
 	"os"
 	"strconv"
 	"strings"
@@ -15,7 +14,7 @@ import (
 	twilioApi "github.com/twilio/twilio-go/rest/api/v2010"
 )
 
-func GetQuote(w http.ResponseWriter, r *http.Request) {
+func GetQuote() {
 	c := colly.NewCollector()
 	quotes := []string{}
 
@@ -25,7 +24,6 @@ func GetQuote(w http.ResponseWriter, r *http.Request) {
 	})
 
 	c.OnResponse(func(r *colly.Response) {
-		fmt.Println("Got a response from", r.Request.URL)
 		c.OnHTML("p", func(e *colly.HTMLElement) {
 			_, err := strconv.Atoi(string(e.Text[0]))
 			if err != nil {
